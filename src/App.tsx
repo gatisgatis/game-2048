@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.module.scss';
-// import _ from 'lodash';
+import { addNewNumberInGame, makeOneDimensionArray, moveNumbers } from './helpers/helpers';
+
 
 export const App = () => {
   return (
@@ -11,4 +12,3 @@ export const App = () => {
     </div>
   );
 };
-
