@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/%7Badd%20your%20homepage%20here%7D/static/css/main.f41e873c.chunk.css",
+    "main.js": "/%7Badd%20your%20homepage%20here%7D/static/js/main.7824a685.chunk.js",
+    "main.js.map": "/%7Badd%20your%20homepage%20here%7D/static/js/main.7824a685.chunk.js.map",
+    "runtime-main.js": "/%7Badd%20your%20homepage%20here%7D/static/js/runtime-main.3a0f1060.js",
+    "runtime-main.js.map": "/%7Badd%20your%20homepage%20here%7D/static/js/runtime-main.3a0f1060.js.map",
+    "static/js/2.84d45465.chunk.js": "/%7Badd%20your%20homepage%20here%7D/static/js/2.84d45465.chunk.js",
+    "static/js/2.84d45465.chunk.js.map": "/%7Badd%20your%20homepage%20here%7D/static/js/2.84d45465.chunk.js.map",
+    "static/js/3.f84339d7.chunk.js": "/%7Badd%20your%20homepage%20here%7D/static/js/3.f84339d7.chunk.js",
+    "static/js/3.f84339d7.chunk.js.map": "/%7Badd%20your%20homepage%20here%7D/static/js/3.f84339d7.chunk.js.map",
+    "index.html": "/%7Badd%20your%20homepage%20here%7D/index.html",
+    "static/css/main.f41e873c.chunk.css.map": "/%7Badd%20your%20homepage%20here%7D/static/css/main.f41e873c.chunk.css.map",
+    "static/js/2.84d45465.chunk.js.LICENSE.txt": "/%7Badd%20your%20homepage%20here%7D/static/js/2.84d45465.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.3a0f1060.js",
+    "static/js/2.84d45465.chunk.js",
+    "static/css/main.f41e873c.chunk.css",
+    "static/js/main.7824a685.chunk.js"
+  ]
+}
