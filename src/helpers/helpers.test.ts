@@ -6,6 +6,10 @@ import {
   splitArrayInRows,
   moveNumbers,
   mergeNumbers,
+  handlePressedKey,
+  calculateResult,
+  isGameOver,
+  isGameWon,
 } from './helpers';
 
 describe('generate2or4randomly()', () => {
@@ -23,7 +27,7 @@ describe('generate2or4randomly()', () => {
     const result = generate2or4randomly();
     expect(result).not.toBe(5);
   });
-  it('should generate 2 about half the time and 4 about half the time', () => {
+  it('should generate 2s about 90% of time', () => {
     const result: number[] = [];
     for (let i = 0; i < 1000; i++) {
       result.push(generate2or4randomly());
@@ -31,7 +35,7 @@ describe('generate2or4randomly()', () => {
     const arr2s = result.filter((num) => num === 2);
     const arr4s = result.filter((num) => num === 4);
     const diff = Math.abs(arr2s.length - arr4s.length);
-    expect(diff).toBeLessThan(100);
+    expect(diff).toBeGreaterThan(750);
   });
 });
 
@@ -56,13 +60,13 @@ describe('makeOneDimensionArray', () => {
 
 describe('addNewNumberInGame', () => {
   it('should work corectly', () => {
-    const lodashSpy = jest.spyOn(_, 'random');
-    lodashSpy.mockReturnValueOnce(1);
+    const lodashRandomSpy = jest.spyOn(_, 'random');
+    lodashRandomSpy.mockReturnValueOnce(1);
     const inputArr = makeOneDimensionArray(4, 0);
     expect(inputArr).toEqual([0, 0, 0, 0]);
     const result = addNewNumberInGame(inputArr);
     expect(result[1]).not.toBe(0);
-    lodashSpy.mockReturnValueOnce(3);
+    lodashRandomSpy.mockReturnValueOnce(3);
     expect(inputArr).toEqual([0, 0, 0, 0]);
     const result2 = addNewNumberInGame(inputArr);
     expect(result2[3]).not.toBe(0);
@@ -100,7 +104,7 @@ describe('splitArrayInRows', () => {
   });
 });
 
-describe('moveRight', () => {
+describe('moveNumbers', () => {
   const arr = makeOneDimensionArray(16, 0);
   const temp = [...arr];
   arr[0] = 2;
@@ -223,5 +227,140 @@ describe('mergeNumbers', () => {
     expectedOutput[13] = 4;
     const result = mergeNumbers(input, 'down');
     expect(result).toEqual(expectedOutput);
+  });
+  it('should merge numbers which are not adjacent right direction', () => {
+    const input = makeOneDimensionArray(16, 0);
+    const expectedOutput = [...input];
+    input[0] = 2;
+    input[3] = 2;
+    expectedOutput[3] = 4;
+    const result = mergeNumbers(input, 'right');
+    expect(result).toEqual(expectedOutput);
+  });
+  it('should merge numbers which are not adjacent up direction', () => {
+    const input = makeOneDimensionArray(16, 0);
+    const expectedOutput = [...input];
+    input[1] = 2;
+    input[9] = 2;
+    input[13] = 2;
+    expectedOutput[13] = 2;
+    expectedOutput[1] = 4;
+    const result = mergeNumbers(input, 'up');
+    expect(result).toEqual(expectedOutput);
+  });
+  it('should not merge same numbers if there are different number between them', () => {
+    const input = makeOneDimensionArray(16, 0);
+    const expectedOutput = [...input];
+    input[0] = 2;
+    input[1] = 4;
+    input[2] = 2;
+    expectedOutput[0] = 2;
+    expectedOutput[1] = 4;
+    expectedOutput[2] = 2;
+    const result = mergeNumbers(input, 'right');
+    expect(result).toEqual(expectedOutput);
+  });
+  it('should not double merge', () => {
+    const input = makeOneDimensionArray(16, 0);
+    const expectedOutput = [...input];
+    input[0] = 4;
+    input[1] = 2;
+    input[2] = 2;
+    expectedOutput[0] = 4;
+    expectedOutput[1] = 0;
+    expectedOutput[2] = 4;
+    const result = mergeNumbers(input, 'right');
+    expect(result).toEqual(expectedOutput);
+  });
+  it('should not double merge test2', () => {
+    const input = makeOneDimensionArray(16, 0);
+    const expectedOutput = [...input];
+    input[0] = 2;
+    input[1] = 4;
+    input[2] = 4;
+    input[3] = 4;
+    expectedOutput[0] = 2;
+    expectedOutput[1] = 4;
+    expectedOutput[2] = 0;
+    expectedOutput[3] = 8;
+    const result = mergeNumbers(input, 'right');
+    expect(result).toEqual(expectedOutput);
+  });
+  it('should not double merge Up direction', () => {
+    const input = [2, 2, 2, 4, 2, 4, 2, 0, 4, 2, 2, 4, 0, 2, 2, 4];
+    const expectedOutput = [4, 2, 4, 8, 0, 4, 0, 0, 4, 4, 4, 0, 0, 0, 0, 4];
+    const result = mergeNumbers(input, 'up');
+    expect(result).toEqual(expectedOutput);
+  });
+  it('should merge complicated scenario LEFT direction', () => {
+    const input = [2, 2, 2, 2, 2, 2, 0, 4, 4, 4, 8, 16, 2, 2, 4, 4];
+    const expectedOutput = [4, 0, 4, 0, 4, 0, 0, 4, 8, 0, 8, 16, 4, 0, 8, 0];
+    const result = mergeNumbers(input, 'left');
+    expect(result).toEqual(expectedOutput);
+  });
+});
+
+describe('handlePressedKey', () => {
+  it('should work', () => {
+    const lodashRandomSpy = jest.spyOn(_, 'random');
+    lodashRandomSpy.mockReturnValue(5);
+    const pressedKey = 'ArrowRight';
+    const input = [8, 0, 2, 2, 0, 2, 4, 4, 2, 0, 4, 0, 4, 16, 0, 2];
+    const expectedOutput = [0, 0, 8, 4, 0, 2, 2, 8, 0, 0, 2, 4, 0, 4, 16, 2];
+    const result = handlePressedKey(input, pressedKey);
+    expect(result).toEqual(expectedOutput);
+  });
+});
+
+describe('calculateResult', () => {
+  it('should work', () => {
+    const input = [0, 4, 2, 8, 2, 4, 8, 0, 0, 2, 4, 16, 32];
+    const expectedOutput = 82;
+    const result = calculateResult(input);
+    expect(result).toBe(expectedOutput);
+  });
+});
+
+describe('isGameOver', () => {
+  it('should return true if no move possible', () => {
+    const input = [2, 4, 8, 2, 4, 2, 4, 8, 2, 4, 2, 4, 4, 2, 4, 2];
+    const expectedOutput = true;
+    const result = isGameOver(input);
+    expect(result).toBe(expectedOutput);
+  });
+  it('should return false if full grid but merge possible', () => {
+    const input = [2, 4, 8, 16, 16, 8, 4, 2, 2, 4, 8, 16, 16, 8, 2, 2];
+    const expectedOutput = false;
+    const result = isGameOver(input);
+    expect(result).toBe(expectedOutput);
+  });
+  it('should return false if grid has only one cell filled', () => {
+    const input = makeOneDimensionArray(16, 0);
+    input[2] = 2;
+    const expectedOutput = false;
+    const result = isGameOver(input);
+    expect(result).toBe(expectedOutput);
+  });
+  it('should return false if grid has at least one zero on it', () => {
+    const input = [2, 4, 8, 2, 4, 2, 4, 8, 2, 0, 2, 4, 4, 2, 4, 2];
+    const expectedOutput = false;
+    const result = isGameOver(input);
+    expect(result).toBe(expectedOutput);
+  });
+});
+
+describe('isGameWon', () => {
+  it('should return true if grid has at least one cell containing 2048', () => {
+    const input = makeOneDimensionArray(16, 0);
+    input[3] = 2048;
+    const expectedOutput = true;
+    const result = isGameWon(input);
+    expect(result).toBe(expectedOutput);
+  });
+  it('should return false if grid has no cell containing 2048', () => {
+    const input = makeOneDimensionArray(16, 0);
+    const expectedOutput = false;
+    const result = isGameWon(input);
+    expect(result).toBe(expectedOutput);
   });
 });

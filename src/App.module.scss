@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+}
+.body {
+    padding: 200px;
+}
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    width: 600px;
+}
+
+.cell {
+    text-align: center;
+    font-size: 75px;
+    min-height: 150px;
+    background-color: lightblue;
+    border: 1px solid red;
+    flex-basis: 25%;
+    font-weight: bold;
+}
