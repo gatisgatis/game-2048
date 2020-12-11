@@ -1,1 +1,0 @@
-import {Template} from './template';

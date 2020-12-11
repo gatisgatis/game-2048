@@ -96,7 +96,7 @@ export const moveNumbers = (arr: number[], direction: Direction) => {
       for (let i = 0; i < 4; i++) {
         output[i * 4 + index] = newRow[i];
       }
-    } else if (direction === 'down') {
+    } else {
       newRow = [...rowZeros, ...rowNoZeros];
       for (let i = 0; i < 4; i++) {
         output[i * 4 + index] = newRow[i];
@@ -106,7 +106,7 @@ export const moveNumbers = (arr: number[], direction: Direction) => {
   return output;
 };
 
-const mergeOneRow = (oneRow: number[]) => {
+export const mergeOneRow = (oneRow: number[]) => {
   const row = [...oneRow];
   for (let i = 3; i > 0; i--) {
     for (let j = i - 1; j >= 0; j--) {

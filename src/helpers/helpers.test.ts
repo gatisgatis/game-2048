@@ -301,12 +301,19 @@ describe('mergeNumbers', () => {
 });
 
 describe('handlePressedKey', () => {
-  it('should work', () => {
+  it('should work when pressed one arrows', () => {
     const lodashRandomSpy = jest.spyOn(_, 'random');
     lodashRandomSpy.mockReturnValue(5);
     const pressedKey = 'ArrowRight';
     const input = [8, 0, 2, 2, 0, 2, 4, 4, 2, 0, 4, 0, 4, 16, 0, 2];
     const expectedOutput = [0, 0, 8, 4, 0, 2, 2, 8, 0, 0, 2, 4, 0, 4, 16, 2];
+    const result = handlePressedKey(input, pressedKey);
+    expect(result).toEqual(expectedOutput);
+  });
+  it('should should do nothing when any other key than arrow pressed', () => {
+    const pressedKey = 'd';
+    const input = [8, 0, 2, 2, 0, 2, 4, 4, 2, 0, 4, 0, 4, 16, 0, 2];
+    const expectedOutput = [8, 0, 2, 2, 0, 2, 4, 4, 2, 0, 4, 0, 4, 16, 0, 2];
     const result = handlePressedKey(input, pressedKey);
     expect(result).toEqual(expectedOutput);
   });
