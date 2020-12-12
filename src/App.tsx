@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect, useRef } from 'react';
 import { v4 as uuid } from 'uuid';
 import styles from './App.module.scss';
+import { useLocalStorage } from './helpers/useLocalStorage';
 import {
   handlePressedKey,
   calculateResult,
@@ -10,15 +11,19 @@ import {
 } from './helpers/helpers';
 import { calculateColor, calculateFontSize } from './helpers/helpers-ui';
 
+// KĀ LAI UZLIEKU,LAI NEKLAUSĀS KLAVIATŪRU TAD,
+// KAD TIEK UZLIKTAS SCREEN BUTTONS UN TAD KAD IZLEC WON GAME LOGS
+
 export const App: FC = () => {
   const [pressedKey, setPressedKey] = useState('');
   const [gameEnd, setGameEnd] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const [controlButtons, setControlButtons] = useState(false);
 
+  const [bestResult, setBestResult] = useLocalStorage('bestResult2048game', 0);
+
   const grid = useRef(initGameGrid());
   const result = useRef(calculateResult(grid.current));
-  const bestResult = useRef(10000);
 
   const keyboardFunction = (event: KeyboardEvent) => {
     setPressedKey(event.key);
@@ -49,6 +54,9 @@ export const App: FC = () => {
       if (isGameWon(grid.current)) {
         setGameWon(true);
       }
+      if (result.current > bestResult) {
+        setBestResult(result.current);
+      }
       setPressedKey('');
     }
   }, [pressedKey]);
@@ -71,7 +79,7 @@ export const App: FC = () => {
           RESTART
         </button>
         <div className={styles.scores}>
-          <div className={styles.best}>BEST: {bestResult.current}</div>
+          <div className={styles.best}>BEST: {bestResult}</div>
           <div className={styles.currentScore}>SCORE: {result.current}</div>
         </div>
       </div>
