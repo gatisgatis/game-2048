@@ -1,3 +1,1 @@
-Strukturēts un ar biežāk lietotajiem dependencies. 
-
-Install npm un go
+https://gatisgatis.github.io/game-2048/
