@@ -1,22 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,700;1,400&display=swap');
+
 * {
     box-sizing: border-box;
-}
-.body {
-    padding: 200px;
+    font-family: 'Rubik', sans-serif;
 }
 
-.wrapper {
+$bg-color: rgb(165, 165, 165);
+$btn-color: grey;
+$btn-color-hover:  rgb(194, 194, 194);
+
+html {
+    font-size: 18px;
+
+    @media (max-width: 800px) {
+        font-size: 15px;
+    }
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
+    @media (max-width: 400px) {
+        font-size: 10px;
+    }
+}
+
+body {
+    padding: 20px 10px 5px 10px;
     display: flex;
+    justify-content: center;
+    background-color: rgb(236, 236, 236);
+}
+
+.contentWrapper {
+    width: 100%;
+    max-width: 500px;
+}
+
+.popupWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    // KĀ ŠEIT UZLIKT, LAI VIŅŠ IR MELNS PAR JA SCROLLO UZ LEJU?
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15%;
+}
+
+.popupCloseButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.popup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 80%;
+}
+
+.popupTitle {
+    color:white;
+    font-size: 4rem;
+    margin-bottom: 2%;
+}
+
+.popupButton {
+    padding: 2%;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.header {
+    width: 100%;
+    padding: 1%;
+    border: 3px solid black;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2%;
+    align-items: center;
+    background-color: $bg-color;
+}
+
+.title {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titleBig {
+    font-size: 3rem;
+}
+
+.titleSmall {
+    font-size: 1.2rem;
+}
+
+.restartButton {
+    display: inline-block;
+    font-size: 1.2rem;
+    padding: 2%;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: $btn-color;
+    cursor: pointer;
+    &:hover{
+        background-color: $btn-color-hover;
+    }
+}
+
+.scores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.best {
+    margin-bottom: 10px;
+}
+
+.gridWrapper {
+    width: 100%;
+    border: 3px solid black;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-around;
     flex-wrap: wrap;
-    width: 600px;
+    background-color: $bg-color;
 }
 
 .cell {
-    text-align: center;
-    font-size: 75px;
-    min-height: 150px;
-    background-color: lightblue;
-    border: 1px solid red;
-    flex-basis: 25%;
-    font-weight: bold;
+    position: relative;
+    padding-top: 21%;
+    border-radius: 5px;
+    flex-basis: 21%;
+    margin: 2% 0;
+}
+
+.number {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rules {
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    padding: 1%;
+    margin: 2% 0;
+}
+
+.showArrowsButton {
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: block;
+    padding: 1px;
+}
+
+.controlsWrapper {
+    width: 100%;
+}
+
+.controlButtonWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.controlButton{
+    flex-basis: 40%;
+    margin: 1%;
+    padding: 1%;
+    font-size: 1.2rem;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: $btn-color;
+    cursor: pointer;
+    &:hover {
+        background-color: $btn-color-hover;
+    }
 }

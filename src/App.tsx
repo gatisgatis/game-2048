@@ -8,21 +8,34 @@ import {
   isGameWon,
   initGameGrid,
 } from './helpers/helpers';
+import { calculateColor, calculateFontSize } from './helpers/helpers-ui';
 
 export const App: FC = () => {
   const [pressedKey, setPressedKey] = useState('');
   const [gameEnd, setGameEnd] = useState(false);
   const [gameWon, setGameWon] = useState(false);
+  const [controlButtons, setControlButtons] = useState(false);
 
   const grid = useRef(initGameGrid());
   const result = useRef(calculateResult(grid.current));
+  const bestResult = useRef(10000);
+
+  const keyboardFunction = (event: KeyboardEvent) => {
+    setPressedKey(event.key);
+  };
+
+  const addKeyBoardListener = () => {
+    document.body.addEventListener('keydown', keyboardFunction);
+  };
+
+  const removeKeyBoardListener = () => {
+    document.body.removeEventListener('keydown', keyboardFunction);
+  };
 
   useEffect(() => {
-    document.body.addEventListener('keydown', (event) => {
-      setPressedKey(event.key);
-    });
+    addKeyBoardListener();
     return () => {
-      document.body.removeEventListener('keydown', (event) => {});
+      removeKeyBoardListener();
     };
   }, []);
 
@@ -41,26 +54,140 @@ export const App: FC = () => {
   }, [pressedKey]);
 
   return (
-    <div>
-      <div className="container">
-        <h1>2048 Game. Result: {result.current} </h1>
-        {gameEnd && <h1>GAME OVER!!!</h1>}
-        {gameWon && <h1>GAME WON!!!</h1>}
-        <div className={styles.wrapper}>
-          {grid.current.map((cell) => {
-            return (
-              <div
-                key={uuid()}
-                className={styles.cell}
-                style={{
-                  backgroundColor: `rgb(${200},${255 - cell * 2},${255 - cell * 0.5})`,
-                }}
-              >
-                {cell !== 0 && cell}
-              </div>
-            );
-          })}
+    <div className={styles.contentWrapper}>
+      <div className={styles.header}>
+        <div className={styles.title}>
+          <span className={styles.titleBig}>2048 </span>
+          <span className={styles.titleSmall}>THE GAME</span>
         </div>
+        <button
+          type="button"
+          className={styles.restartButton}
+          onClick={() => {
+            grid.current = initGameGrid();
+            setPressedKey('restart');
+          }}
+        >
+          RESTART
+        </button>
+        <div className={styles.scores}>
+          <div className={styles.best}>BEST: {bestResult.current}</div>
+          <div className={styles.currentScore}>SCORE: {result.current}</div>
+        </div>
+      </div>
+      {gameEnd && (
+        <div className={styles.popupWrapper}>
+          <button
+            type="button"
+            className={styles.popupCloseButton}
+            onClick={() => setGameEnd(!gameEnd)}
+          >
+            CLOSE
+          </button>
+          <div className={styles.popup}>
+            <span className={styles.popupTitle}>GAME OVER</span>
+            <button
+              type="button"
+              className={styles.popupButton}
+              onClick={() => {
+                grid.current = initGameGrid();
+                setPressedKey('restart');
+                setGameEnd(!gameEnd);
+              }}
+            >
+              PLAY AGAIN
+            </button>
+          </div>
+        </div>
+      )}
+      {gameWon && (
+        <div className={styles.popupWrapper}>
+          <button
+            type="button"
+            className={styles.popupCloseButton}
+            onClick={() => setGameWon(!gameWon)}
+          >
+            CLOSE
+          </button>
+          <div className={styles.popup}>
+            <span className={styles.popupTitle}>YOU WON</span>
+            <button
+              className={styles.popupButton}
+              type="button"
+              onClick={() => setGameWon(!gameWon)}
+            >
+              CONTINUE PLAYING
+            </button>
+          </div>
+        </div>
+      )}
+      <div className={styles.gridWrapper}>
+        {grid.current.map((cell) => {
+          return (
+            <div
+              className={styles.cell}
+              key={uuid()}
+              style={{
+                backgroundColor: calculateColor(cell),
+                color: cell === 0 ? 'transparent' : ' rgb(60, 60, 60)',
+                fontSize: calculateFontSize(cell),
+              }}
+            >
+              <div className={styles.number}>{cell}</div>
+            </div>
+          );
+        })}
+      </div>
+      {controlButtons && (
+        <div className={styles.controlsWrapper}>
+          <div className={styles.controlButtonWrapper}>
+            <button
+              type="button"
+              className={styles.controlButton}
+              onClick={() => setPressedKey('ArrowUp')}
+            >
+              UP
+            </button>
+          </div>
+          <div className={styles.controlButtonWrapper}>
+            <button
+              type="button"
+              className={styles.controlButton}
+              onClick={() => setPressedKey('ArrowLeft')}
+            >
+              LEFT
+            </button>
+            <button
+              type="button"
+              className={styles.controlButton}
+              onClick={() => setPressedKey('ArrowRight')}
+            >
+              RIGHT
+            </button>
+          </div>
+          <div className={styles.controlButtonWrapper}>
+            <button
+              type="button"
+              className={styles.controlButton}
+              onClick={() => setPressedKey('ArrowDown')}
+            >
+              DOWN
+            </button>
+          </div>
+        </div>
+      )}
+      <div className={styles.rules}>
+        HOW TO PLAY: Use your arrow keys (or controls on screen) to move the tiles. Tiles with the
+        same number merge into one when they touch. Add them up to reach 2048!
+        <button
+          type="button"
+          className={styles.showArrowsButton}
+          onClick={() => {
+            setControlButtons(!controlButtons);
+          }}
+        >
+          {controlButtons ? 'HIDE CONTROLS' : 'SHOW CONTROLS'}
+        </button>
       </div>
     </div>
   );
