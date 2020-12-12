@@ -39,6 +39,9 @@ export const App: FC = () => {
 
   useEffect(() => {
     addKeyBoardListener();
+    if (window.innerWidth < 600) {
+      setControlButtons(!controlButtons);
+    }
     return () => {
       removeKeyBoardListener();
     };
