@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, { FC, useState, useEffect, useRef, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import styles from './App.module.scss';
 import { useLocalStorage } from './helpers/useLocalStorage';
@@ -11,9 +11,6 @@ import {
 } from './helpers/helpers';
 import { calculateColor, calculateFontSize } from './helpers/helpers-ui';
 
-// KĀ LAI UZLIEKU,LAI NEKLAUSĀS KLAVIATŪRU TAD,
-// KAD TIEK UZLIKTAS SCREEN BUTTONS UN TAD KAD IZLEC WON GAME LOGS
-
 export const App: FC = () => {
   const [pressedKey, setPressedKey] = useState('');
   const [gameEnd, setGameEnd] = useState(false);
@@ -24,10 +21,11 @@ export const App: FC = () => {
 
   const grid = useRef(initGameGrid());
   const result = useRef(calculateResult(grid.current));
+  const hasWon = useRef(false);
 
-  const keyboardFunction = (event: KeyboardEvent) => {
+  const keyboardFunction = useCallback((event: KeyboardEvent) => {
     setPressedKey(event.key);
-  };
+  }, []);
 
   const addKeyBoardListener = () => {
     document.body.addEventListener('keydown', keyboardFunction);
@@ -38,9 +36,10 @@ export const App: FC = () => {
   };
 
   useEffect(() => {
-    addKeyBoardListener();
     if (window.innerWidth < 600) {
       setControlButtons(!controlButtons);
+    } else {
+      addKeyBoardListener();
     }
     return () => {
       removeKeyBoardListener();
@@ -54,8 +53,10 @@ export const App: FC = () => {
       if (isGameOver(grid.current)) {
         setGameEnd(true);
       }
-      if (isGameWon(grid.current)) {
+      if (isGameWon(grid.current) && !hasWon.current) {
         setGameWon(true);
+        hasWon.current = true;
+        removeKeyBoardListener();
       }
       if (result.current > bestResult) {
         setBestResult(result.current);
@@ -77,6 +78,7 @@ export const App: FC = () => {
           onClick={() => {
             grid.current = initGameGrid();
             setPressedKey('restart');
+            hasWon.current = false;
           }}
         >
           RESTART
@@ -104,6 +106,7 @@ export const App: FC = () => {
                 grid.current = initGameGrid();
                 setPressedKey('restart');
                 setGameEnd(!gameEnd);
+                hasWon.current = false;
               }}
             >
               PLAY AGAIN
@@ -116,7 +119,10 @@ export const App: FC = () => {
           <button
             type="button"
             className={styles.popupCloseButton}
-            onClick={() => setGameWon(!gameWon)}
+            onClick={() => {
+              setGameWon(!gameWon);
+              addKeyBoardListener();
+            }}
           >
             CLOSE
           </button>
@@ -125,7 +131,10 @@ export const App: FC = () => {
             <button
               className={styles.popupButton}
               type="button"
-              onClick={() => setGameWon(!gameWon)}
+              onClick={() => {
+                setGameWon(!gameWon);
+                addKeyBoardListener();
+              }}
             >
               CONTINUE PLAYING
             </button>
@@ -195,6 +204,7 @@ export const App: FC = () => {
           className={styles.showArrowsButton}
           onClick={() => {
             setControlButtons(!controlButtons);
+            controlButtons ? addKeyBoardListener() : removeKeyBoardListener();
           }}
         >
           {controlButtons ? 'HIDE CONTROLS' : 'SHOW CONTROLS'}

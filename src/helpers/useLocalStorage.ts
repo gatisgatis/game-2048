@@ -8,7 +8,7 @@ const getSavedValue = <T>(key: string, initialValue: T) => {
 
 export const useLocalStorage = <T>(key: string, initialValue: T) => {
   const [storedValue, setStoredValue] = useState(getSavedValue(key, initialValue));
-
+  
   const setValue = (value: T) => {
     localStorage.setItem(key, JSON.stringify(value));
     setStoredValue(value);
