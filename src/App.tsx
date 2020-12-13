@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 import React, { FC, useState, useEffect, useRef, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import styles from './App.module.scss';
@@ -22,6 +23,8 @@ export const App: FC = () => {
   const grid = useRef(initGameGrid());
   const result = useRef(calculateResult(grid.current));
   const hasWon = useRef(false);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
   const keyboardFunction = useCallback((event: KeyboardEvent) => {
     setPressedKey(event.key);
@@ -36,11 +39,7 @@ export const App: FC = () => {
   };
 
   useEffect(() => {
-    if (window.innerWidth < 600) {
-      setControlButtons(!controlButtons);
-    } else {
-      addKeyBoardListener();
-    }
+    addKeyBoardListener();
     return () => {
       removeKeyBoardListener();
     };
@@ -64,6 +63,29 @@ export const App: FC = () => {
       setPressedKey('');
     }
   }, [pressedKey]);
+
+  const handleStartTouch = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = event.touches[0].clientX;
+    touchStartY.current = event.touches[0].clientY;
+  };
+
+  const handleEndTouch = (event: React.TouchEvent<HTMLDivElement>) => {
+    const x = event.changedTouches[0].clientX - touchStartX.current;
+    const y = event.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(x) >= Math.abs(y)) {
+      if (x > 0) {
+        setPressedKey('ArrowRight');
+      } else {
+        setPressedKey('ArrowLeft');
+      }
+    } else {
+      if (y > 0) {
+        setPressedKey('ArrowDown');
+      } else {
+        setPressedKey('ArrowUp');
+      }
+    }
+  };
 
   return (
     <div className={styles.contentWrapper}>
@@ -141,7 +163,11 @@ export const App: FC = () => {
           </div>
         </div>
       )}
-      <div className={styles.gridWrapper}>
+      <div
+        className={styles.gridWrapper}
+        onTouchStart={handleStartTouch}
+        onTouchEnd={handleEndTouch}
+      >
         {grid.current.map((cell) => {
           return (
             <div
