@@ -25,24 +25,12 @@ export const makeOneDimensionArray = <T>(length: number, fill: T) => {
 
 export const addNewNumberInGame = (arr: number[]) => {
   const output = [...arr];
-
-  // while version
-  let stopLoop = false;
-  while (!stopLoop) {
-    const index = _.random(0, arr.length - 1);
-    if (!output[index]) {
-      output[index] = generate2or4randomly();
-      stopLoop = true;
-    }
+  const zeroElementIndexes: number[] = [];
+  for (let i = 0; i < output.length; i++) {
+    if (output[i] === 0) zeroElementIndexes.push(i);
   }
-  // recursion version
-  //   const index = _.random(0, arr.length-1);
-  //   const output = [...arr];
-  //   if (output[index] === 0) {
-  //     output[index] = generate2or4randomly();
-  //   } else {
-  //     addNewNumberInGame(arr);
-  //   }
+  const index = _.random(0, zeroElementIndexes.length - 1);
+  output[zeroElementIndexes[index]] = generate2or4randomly();
   return output;
 };
 
