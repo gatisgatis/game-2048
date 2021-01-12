@@ -2,7 +2,7 @@ World famous 2048 game's clone
 
 Mobile friendly
 
-TDD, Jest
+React, TS, TDD, Jest
 
 Pro reviewed by Martins J
 
