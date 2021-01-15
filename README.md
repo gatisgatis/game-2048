@@ -4,6 +4,4 @@ Mobile friendly
 
 React, TS, TDD, Jest
 
-Pro reviewed by Martins J
-
 https://gatisgatis.github.io/game-2048/
